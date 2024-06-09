@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\employees;
+namespace App\Http\Requests\tasks;
 
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StoreEmployeeRequest extends BaseFormRequest
+class StoreTaskRequest extends BaseFormRequest
 {
     /**
      * Get the validation rules that apply to the request.

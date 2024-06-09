@@ -1,12 +1,12 @@
 <?php
-// In app/Policies/EmployeePolicy.php
+// In app/Policies/TaskPolicy.php
 
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Employee;
+use App\Models\Task;
 
-class EmployeePolicy
+class TaskPolicy
 {
 
     public function viewAny(User $user)
@@ -14,9 +14,9 @@ class EmployeePolicy
         return $user->hasRole('admin') || $user->hasRole('manager');
     }
 
-    public function view(User $user, Employee $employee)
+    public function view(User $user, Task $task)
     {
-        return $user->hasRole('admin') || $user->hasRole('manager') || $user->id === $employee->user_id;
+        return $user->hasRole('admin') || $user->hasRole('manager') || $user->id === $task->user_id;
     }
 
     public function create(User $user)
@@ -24,12 +24,12 @@ class EmployeePolicy
         return $user->hasRole('admin');
     }
 
-    public function update(User $user, Employee $employee)
+    public function update(User $user, Task $task)
     {
-        return $user->hasRole('admin') || $user->id === $employee->user_id;
+        return $user->hasRole('admin') || $user->id === $task->user_id;
     }
 
-    public function delete(User $user, Employee $employee)
+    public function delete(User $user, Task $task)
     {
         return $user->hasRole('admin');
     }

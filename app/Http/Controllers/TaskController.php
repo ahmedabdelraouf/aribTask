@@ -13,7 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class EmployeeController extends Controller
+class TaskController extends Controller
 {
     public function __construct()
     {
