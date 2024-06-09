@@ -4,6 +4,9 @@
             <input type="text" name="name" class="form-control" value="{{request()->get("name")}}" placeholder="Name">
         </div>
         <div class="col">
+            <input type="text" name="manager_name" class="form-control" value="{{request()->get("manager_name")}}" placeholder="Manager name">
+        </div>
+        <div class="col">
             <input type="number" name="salary_from" class="form-control" value="{{request()->get("salary_from")}}"
                    placeholder="Salary From">
         </div>

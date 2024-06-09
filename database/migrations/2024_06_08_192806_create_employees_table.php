@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->decimal('salary', 8, 2);
             $table->string('image')->nullable();
+            $table->string('manager_name')->nullable();
             $table->timestamps();
         });
     }
