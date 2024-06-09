@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-// app/Http/Controllers/EmployeeController.php
+
 use App\Http\Requests\employees\StoreEmployeeRequest;
 use App\Http\Requests\employees\UpdateEmployeeRequest;
 use App\Models\Employee;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -15,14 +19,22 @@ class EmployeeController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    /**
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     * @throws AuthorizationException
+     */
+    public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $this->authorize('viewAny', Employee::class);
         $employees = Employee::all();
         return view('employees.index', compact('employees'));
     }
 
-    public function create()
+    /**
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     * @throws AuthorizationException
+     */
+    public function create(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $this->authorize('create', Employee::class);
         return view('employees.create');
@@ -30,8 +42,6 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployeeRequest $request)
     {
-        $imageUrl = Storage::url("images/JOjYX6xpjNFWI4RKyclxuhq6a1L6biWf7gp57Wmx.jpg");
-        dd($imageUrl);
         $this->authorize('create', Employee::class);
         $validated = $request->validated();
 
@@ -49,7 +59,10 @@ class EmployeeController extends Controller
     }
 
 
-    public function update(UpdateEmployeeRequest $request, Employee $employee)
+    /**
+     * @throws AuthorizationException
+     */
+    public function update(UpdateEmployeeRequest $request, Employee $employee): RedirectResponse
     {
         $this->authorize('update', $employee);
         $validated = $request->validated();

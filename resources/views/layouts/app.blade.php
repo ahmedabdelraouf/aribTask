@@ -35,6 +35,11 @@
                     <a class="navbar-brand" href="{{ url('/employees') }}">
                         {{ __('Employees') }}
                     </a>
+                    <a class="navbar-brand" href="{{ url('/departments') }}">
+                        {{ __('Departments') }}
+                    </a>
+                </ul>
+                <ul class="navbar-nav me-auto">
                 </ul>
 
                 <!-- Right Side Of Navbar -->
