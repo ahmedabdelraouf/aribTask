@@ -18,9 +18,8 @@
                                 <div class="col-md-6">
                                     <input id="login" type="text"
                                            class="form-control @error('login') is-invalid @enderror" name="login"
-                                           value="{{ old('login')??"01014158911" }}" required autocomplete="login" autofocus
-
-                                    >
+                                           value="{{ old('login')??"01014158911" }}" required autocomplete="login"
+                                           autofocus>
 
                                     @error('login')
                                     <span class="invalid-feedback" role="alert">

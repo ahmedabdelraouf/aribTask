@@ -47,19 +47,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-
-    public function setPhoneAttribute($value)
-    {
-        $this->attributes['phone'] = Crypt::encryptString($value);
-    }
-
-    public function getPhoneAttribute($value)
-    {
-        try {
-            return Crypt::decryptString($value);
-        } catch (DecryptException $e) {
-            return $value;
-        }
-    }
 }
