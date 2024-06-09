@@ -96,6 +96,9 @@ class DepartmentController extends Controller
     public function destroy(Department $department): RedirectResponse
     {
         $this->authorize('delete', $department);
+        if ($department->employees()->count() > 0) {
+            return redirect()->route('departments.index')->with('error', 'Department has Employees so you can not delete it.');
+        }
         $department->delete();
         return redirect()->route('departments.index')->with('success', 'Department deleted successfully.');
     }

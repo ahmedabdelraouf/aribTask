@@ -5,7 +5,9 @@
         <h1>Employees</h1>
         <a href="{{ route('employees.create') }}" class="btn btn-primary mb-3">Add Employee</a>
         @include('employees._form_search')
-        @include("layouts.session_message")
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
         <table class="table">
             <thead>
             <tr>

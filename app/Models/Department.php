@@ -21,4 +21,11 @@ class Department extends Model
     {
         return $this->hasMany(Employee::class, 'department_id', 'id');
     }
+    /**
+     * @return HasMany
+     */
+    public function salaries()
+    {
+        return $this->employees()->sum("salary");
+    }
 }

@@ -4,14 +4,14 @@
     <div class="container">
         <h1>Departments</h1>
         <a href="{{ route('departments.create') }}" class="btn btn-primary mb-3">Add Department</a>
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+        @include("layouts.session_message")
         <table class="table">
             <thead>
             <tr>
                 <th>id</th>
                 <th>Name</th>
+                <th>Total Employees</th>
+                <th>Total Salaries</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -20,6 +20,8 @@
                 <tr class="{{ $loop->index % 2 == 0 ? 'table-secondary' : '' }}">
                     <td>{{ $department->id }}</td>
                     <td>{{ $department->name }}</td>
+                    <td>{{ $department->employees()->count() }}</td>
+                    <td>{{ $department->salaries() }}</td>
                     <td>
                         <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-warning">Edit</a>
                         <form action="{{ route('departments.destroy', $department->id) }}" method="POST"

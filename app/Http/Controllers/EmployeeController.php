@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\employees\StoreEmployeeRequest;
 use App\Http\Requests\employees\UpdateEmployeeRequest;
+use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
@@ -27,7 +28,8 @@ class EmployeeController extends Controller
     {
         $this->authorize('viewAny', Employee::class);
         $employees = Employee::all();
-        return view('employees.index', compact('employees'));
+        $departments = Department::all();
+        return view('employees.index', compact('employees', 'departments'));
     }
 
     /**
@@ -88,6 +90,7 @@ class EmployeeController extends Controller
         $managerName = $request->input('manager_name');
         $salaryFrom = $request->input('salary_from');
         $salaryTo = $request->input('salary_to');
+        $department_id = $request->input('department_id');
         $employees = Employee::query();
         if ($name) {
             $employees->where(function ($query) use ($name) {
@@ -104,9 +107,13 @@ class EmployeeController extends Controller
         if ($salaryTo) {
             $employees->where('salary', '<=', $salaryTo);
         }
+        if ($department_id) {
+            $employees->where('department_id', $department_id);
+        }
 
         $employees = $employees->get();
 
-        return view('employees.index', compact('employees'));
+        $departments = Department::all();
+        return view('employees.index', compact('employees', 'departments'));
     }
 }
