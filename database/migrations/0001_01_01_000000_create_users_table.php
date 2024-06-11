@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->string('phone')->nullable()->unique();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null')->after('manager_id');
             $table->rememberToken();
             $table->timestamps();
         });

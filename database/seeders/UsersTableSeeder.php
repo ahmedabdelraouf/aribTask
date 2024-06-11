@@ -16,8 +16,16 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        for ($i = 0; $i < 2; $i++) {
-            $this->createUser($faker, User::ROLE_ADMIN);
+        for ($i = 0; $i < 1; $i++) {
+            print_r("Please enter admon cerdentials: ");
+            $firstName = $this->command->ask('Enter first name of admin user');
+            $lastName = $this->command->ask('Enter last name of admin user');
+            $email = $this->command->ask('Enter email of the user');
+            $password = $this->command->ask('Enter the password of the user');
+
+            $this->doCreate("$firstName", "$lastName",
+                $faker->randomFloat(2, 30000, 100000), null,
+                "$email", User::ROLE_ADMIN, "$password");
         }
         for ($i = 0; $i < 5; $i++) {
             $this->createUser($faker, User::ROLE_MANAGER);
@@ -34,22 +42,27 @@ class UsersTableSeeder extends Seeder
         if (!empty($managerIds)) {
             $managerId = $managerIds[array_rand($managerIds)];
         }
+        $this->doCreate("$faker->firstName", "$faker->lastName",
+            $faker->randomFloat(2, 30000, 100000), "$managerId",
+            $faker->unique()->safeEmail, "$role");
+    }
+
+    public function doCreate($firstName, $lastName, $salary, $managerId, $email, $role, $password = "Aa@#123456")
+    {
         User::create([
-            'first_name' => $faker->firstName,
-            'last_name' => $faker->lastName,
-            'salary' => $faker->randomFloat(2, 30000, 100000),
-            'image' => null,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'salary' => $salary,
             'manager_id' => $managerId,
-            'email' => $faker->unique()->safeEmail,
-            'email_verified_at' => $faker->boolean ? now() : null,
+            'email' => $email,
+            'email_verified_at' => now(),
             'phone' => null,
-            'phone_verified_at' => $faker->boolean ? now() : null,
-            'password' => Hash::make('Aa@#123456'),
+            'phone_verified_at' => now(),
+            'password' => Hash::make($password),
             'remember_token' => null,
             'role' => $role,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
     }
 }
