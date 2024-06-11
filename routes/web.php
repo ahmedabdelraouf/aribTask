@@ -12,7 +12,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('employees/search', [EmployeeController::class, 'search'])->name('employees.search')->middleware('auth');
-Route::resource('employees', EmployeeController::class)->middleware('auth');
-Route::resource('departments', DepartmentController::class)->middleware('auth');
-Route::resource('tasks', \App\Http\Controllers\TaskController::class)->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get('employees/search', [EmployeeController::class, 'search'])->name('employees.search');
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('departments', DepartmentController::class);
+    Route::resource('tasks', \App\Http\Controllers\TaskController::class);
+});

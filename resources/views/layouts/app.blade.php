@@ -31,19 +31,19 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav me-auto">
-                    <a class="navbar-brand" href="{{ url('/employees') }}">
-                        {{ __('Employees') }}
-                    </a>
-                    <a class="navbar-brand" href="{{ url('/departments') }}">
-                        {{ __('Departments') }}
-                    </a>
-                    <a class="navbar-brand" href="{{ url('/tasks') }}">
-                        {{ __('Tasks') }}
-                    </a>
-                </ul>
-                <ul class="navbar-nav me-auto">
-                </ul>
+                @auth
+                    <ul class="navbar-nav me-auto">
+                        <a class="navbar-brand" href="{{ url('/employees') }}">
+                            {{ __('Employees') }}
+                        </a>
+                        <a class="navbar-brand" href="{{ url('/departments') }}">
+                            {{ __('Departments') }}
+                        </a>
+                        <a class="navbar-brand" href="{{ url('/tasks') }}">
+                            {{ __('Tasks') }}
+                        </a>
+                    </ul>
+                @endauth
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
