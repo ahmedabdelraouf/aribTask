@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\employees\StoreEmployeeRequest;
-use App\Http\Requests\employees\UpdateEmployeeRequest;
-use App\Models\Department;
-use App\Models\Employee;
+use App\Http\Requests\tasks\StoreTaskRequest;
+use App\Http\Requests\tasks\UpdateTaskRequest;
+use App\Models\Task;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -15,21 +14,15 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * @return Application|Factory|View|\Illuminate\Foundation\Application
      * @throws AuthorizationException
      */
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $this->authorize('viewAny', Employee::class);
-        $employees = Employee::all();
-        $departments = Department::all();
-        return view('employees.index', compact('employees', 'departments'));
+        $this->authorize('viewAny', Task::class);
+        $tasks = Task::all();
+        return view('tasks.index', compact('tasks'));
     }
 
     /**
@@ -38,82 +31,71 @@ class TaskController extends Controller
      */
     public function create(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $this->authorize('create', Employee::class);
-        return view('employees.create');
+        $this->authorize('create', Task::class);
+        $statuses = Task::$statuses;
+        return view('tasks.create',compact('statuses'));
     }
 
-    public function store(StoreEmployeeRequest $request)
+    public function store(StoreTaskRequest $request)
     {
-        $this->authorize('create', Employee::class);
+        $this->authorize('create', Task::class);
         $validated = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('images', 'public');
-        }
-        Employee::create($validated);
-        return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
+        Task::create($validated);
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
 
-    public function edit(Employee $employee)
+    public function edit(Task $task)
     {
-        $this->authorize('update', $employee);
-        return view('employees.edit', compact('employee'));
+        $this->authorize('update', $task);
+        return view('tasks.edit', compact('task'));
     }
 
 
     /**
      * @throws AuthorizationException
      */
-    public function update(UpdateEmployeeRequest $request, Employee $employee): RedirectResponse
+    public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
-        $this->authorize('update', $employee);
+        $this->authorize('update', $task);
         $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images', 'public');
         }
 
-        $employee->update($validated);
-        return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+        $task->update($validated);
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
 
-    public function destroy(Employee $employee)
+    public function destroy(Task $task)
     {
-        $this->authorize('delete', $employee);
-        $employee->delete();
-        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+        $this->authorize('delete', $task);
+        $task->delete();
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
 
     public function search(Request $request)
     {
-        $name = $request->input('name');
-        $managerName = $request->input('manager_name');
-        $salaryFrom = $request->input('salary_from');
-        $salaryTo = $request->input('salary_to');
-        $department_id = $request->input('department_id');
-        $employees = Employee::query();
-        if ($name) {
-            $employees->where(function ($query) use ($name) {
-                $query->where('first_name', 'LIKE', "%{$name}%")
-                    ->orWhere('last_name', 'LIKE', "%{$name}%");
+        $subject = $request->input('subject');
+        $status_id = $request->input('status_id');
+        $employee_id = $request->input('employee_id');
+        $tasks = Task::query();
+        if ($subject) {
+            $tasks->where(function ($query) use ($subject) {
+                $query->where('subject', 'LIKE', "%{$subject}%");
             });
         }
-        if ($managerName) {
-            $employees->where('manager_name', 'LIKE', "%{$managerName}%");
-        }
-        if ($salaryFrom) {
-            $employees->where('salary', '>=', $salaryFrom);
-        }
-        if ($salaryTo) {
-            $employees->where('salary', '<=', $salaryTo);
-        }
-        if ($department_id) {
-            $employees->where('department_id', $department_id);
+        if ($employee_id) {
+            $tasks->where('employee_id', $employee_id);
         }
 
-        $employees = $employees->get();
+        if ($status_id) {
+            $tasks->where('status_id', $status_id);
+        }
 
-        $departments = Department::all();
-        return view('employees.index', compact('employees', 'departments'));
+        $tasks = $tasks->get();
+
+        return view('tasks.index', compact('tasks'));
     }
 }

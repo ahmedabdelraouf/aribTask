@@ -2,35 +2,38 @@
 
 @section('content')
     <div class="container">
-        <h1>Employees</h1>
-        <a href="{{ route('employees.create') }}" class="btn btn-primary mb-3">Add Employee</a>
-        @include('employees._form_search')
+        <h1>Tasks</h1>
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Add Employee</a>
         @include("layouts.session_message")
         <table class="table">
             <thead>
             <tr>
                 <th>id</th>
                 <th>subject</th>
+                <th>Description</th>
                 <th>Employee</th>
-                <th>manager</th>
-                <th>Department</th>
-                <th>Tasks</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($employees as $employee)
+            @foreach($tasks as $task)
+               <?php
+                    $name = "none";
+                    if(!empty($task->employee())){
+                        $name = $task->employee()->first_name;
+                    }
+                        dd("dfvfd $name");
+                    ?>
                 <tr class="{{ $loop->index % 2 == 0 ? 'table-secondary' : '' }}">
-                    <td>{{ $employee->id }}</td>
-                    <td><img src="{{ $employee->image_url }}"
-                             style="width: 3rem;height: 3rem"> {{ $employee->full_name }}</td>
-                    <td>{{ $employee->salary }}</td>
-                    <td>{{ $employee->manager_name }}</td>
-                    <td><?php echo "Depart "; ?></td>
-                    <td><?php echo "Tasks count"; ?></td>
+                    <td>{{ $task->id }}</td>
+                    <td>{{ $task->subject }}</td>
+                    <td>{{ $task->description }}</td>
+                    <td>{{(!empty($task->employee()))??$task->employee()->first_name }}</td>
+                    <td>{{ $task->status }}</td>
                     <td>
-                        <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                        <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
                               style="display:inline;"
                               onsubmit="return confirm('Are you sure you want to delete this employee?');">
                             @csrf

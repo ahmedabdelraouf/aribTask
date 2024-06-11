@@ -22,11 +22,12 @@
             @foreach($employees as $employee)
                 <tr class="{{ $loop->index % 2 == 0 ? 'table-secondary' : '' }}">
                     <td>{{ $employee->id }}</td>
-                    <td><img src="{{ $employee->image_url }}" style="width: 3rem;height: 3rem"> {{ $employee->full_name }}</td>
+                    <td><img src="{{ $employee->image_url }}"
+                             style="width: 3rem;height: 3rem"> {{ $employee->full_name }}</td>
                     <td>{{ $employee->salary }}</td>
                     <td>{{ $employee->manager_name }}</td>
-                    <td><?php echo "Depart "; ?></td>
-                    <td><?php echo "Tasks count"; ?></td>
+                    <td>{{$employee->department->name??"None"}}</td>
+                    <td>{{count($employee->tasksCount)}}</td>
                     <td>
                         <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning">Edit</a>
                         <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"

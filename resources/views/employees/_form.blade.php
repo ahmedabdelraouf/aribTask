@@ -2,7 +2,8 @@
 
 <div class="form-group">
     <label for="first_name">First Name</label>
-    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name', $employee->first_name ?? '') }}" required>
+    <input type="text" class="form-control" id="first_name" name="first_name"
+           value="{{ old('first_name', $employee->first_name ?? '') }}" required>
     @error('first_name')
     <span class="text-danger">{{ $message }}</span>
     @enderror
@@ -10,15 +11,23 @@
 
 <div class="form-group">
     <label for="last_name">Last Name</label>
-    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ old('last_name', $employee->last_name ?? '') }}" required>
+    <input type="text" class="form-control" id="last_name" name="last_name"
+           value="{{ old('last_name', $employee->last_name ?? '') }}" required>
     @error('last_name')
     <span class="text-danger">{{ $message }}</span>
     @enderror
 </div>
 
+
+<div class="form-group">
+    <label for="last_name">Department</label>
+    @include("departments.deps_select")
+</div>
+
 <div class="form-group">
     <label for="salary">Salary</label>
-    <input type="number" step="0.01" class="form-control" id="salary" name="salary" value="{{ old('salary', $employee->salary ?? '') }}" required>
+    <input type="number" step="0.01" class="form-control" id="salary" name="salary"
+           value="{{ old('salary', $employee->salary ?? '') }}" required>
     @error('salary')
     <span class="text-danger">{{ $message }}</span>
     @enderror
@@ -26,7 +35,8 @@
 
 <div class="form-group">
     <label for="manager_name">Manager Name</label>
-    <input type="text" class="form-control" id="manager_name" name="manager_name" value="{{ old('manager_name', $employee->manager_name ?? '') }}" required>
+    <input type="text" class="form-control" id="manager_name" name="manager_name"
+           value="{{ old('manager_name', $employee->manager_name ?? '') }}" required>
     @error('manager_name')
     <span class="text-danger">{{ $message }}</span>
     @enderror

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -16,7 +17,7 @@ class Employee extends Model
 {
     protected $guarded = ['id'];
 
-    protected $fillable = ['first_name', 'last_name', 'salary', 'image', 'manager_name'];
+    protected $fillable = ['first_name', 'last_name', 'salary', 'image', 'manager_name', 'department_id'];
 
     /**
      * @return BelongsTo
@@ -25,6 +26,14 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class,"department_id","id");
 
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function tasksCount(): HasMany
+    {
+        return $this->hasMany(Task::class,"employee_id","id");
     }
 
     /**

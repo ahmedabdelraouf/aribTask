@@ -38,6 +38,9 @@
                     <a class="navbar-brand" href="{{ url('/departments') }}">
                         {{ __('Departments') }}
                     </a>
+                    <a class="navbar-brand" href="{{ url('/tasks') }}">
+                        {{ __('Tasks') }}
+                    </a>
                 </ul>
                 <ul class="navbar-nav me-auto">
                 </ul>

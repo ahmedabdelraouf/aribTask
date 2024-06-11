@@ -39,7 +39,8 @@ class EmployeeController extends Controller
     public function create(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $this->authorize('create', Employee::class);
-        return view('employees.create');
+        $departments = Department::all();
+        return view('employees.create',compact('departments'));
     }
 
     public function store(StoreEmployeeRequest $request)
@@ -57,7 +58,8 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         $this->authorize('update', $employee);
-        return view('employees.edit', compact('employee'));
+        $departments = Department::all();
+        return view('employees.edit', compact('employee','departments'));
     }
 
 

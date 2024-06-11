@@ -3,8 +3,6 @@
 namespace App\Http\Requests\employees;
 
 use App\Http\Requests\BaseFormRequest;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class StoreEmployeeRequest extends BaseFormRequest
 {
@@ -19,6 +17,12 @@ class StoreEmployeeRequest extends BaseFormRequest
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'salary' => 'required|numeric',
+            'department_id' => [
+                'required',
+                'numeric',
+                'exists:departments,id',
+                'unique:employees,department_id',
+            ],
             'image' => 'nullable|image|max:2048',
             'manager_name' => 'required|string|max:255',
         ];
