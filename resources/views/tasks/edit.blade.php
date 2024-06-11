@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="container">
-        <h1>Edit Employee</h1>
-        <form action="{{ route('tasks.update', $employee->id) }}" method="POST" enctype="multipart/form-data">
+        <h1>Edit Task</h1>
+        <form action="{{ route('tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             @include('tasks._form')

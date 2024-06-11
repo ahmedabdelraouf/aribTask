@@ -3,6 +3,7 @@
 namespace App\Http\Requests\tasks;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Models\Task;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,11 +17,11 @@ class UpdateTaskRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'salary' => 'required|numeric',
-            'image' => 'nullable|image|max:2048',
-            'manager_name' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'status' => 'required|string',
+            'employee_id' => 'nullable',
+            'status.*' => 'required|string|in:' . implode(",", Task::$statuses),
         ];
     }
 }

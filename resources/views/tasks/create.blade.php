@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <h1>Create Employee</h1>
+        <h1>Create Task</h1>
         @include("layouts.session_message")
         <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
             @csrf

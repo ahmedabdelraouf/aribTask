@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\tasks\StoreTaskRequest;
 use App\Http\Requests\tasks\UpdateTaskRequest;
+use App\Models\Employee;
 use App\Models\Task;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
@@ -18,11 +19,13 @@ class TaskController extends Controller
      * @return Application|Factory|View|\Illuminate\Foundation\Application
      * @throws AuthorizationException
      */
-    public function index(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function index(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $this->authorize('viewAny', Task::class);
-        $tasks = Task::all();
-        return view('tasks.index', compact('tasks'));
+        $tasks = $this->getFilteredTasks($request);
+        $statuses = Task::$statuses;
+        $employees = Employee::select('id', 'first_name', 'last_name')->get();
+        return view('tasks.index', compact('statuses', 'employees', 'tasks'));
     }
 
     /**
@@ -32,25 +35,32 @@ class TaskController extends Controller
     public function create(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $this->authorize('create', Task::class);
-        $statuses = Task::$statuses;
-        return view('tasks.create',compact('statuses'));
+        return $this->prepareFormData();
     }
 
     public function store(StoreTaskRequest $request)
     {
         $this->authorize('create', Task::class);
         $validated = $request->validated();
-
         Task::create($validated);
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+    }
+
+    private function prepareFormData(Task $task = null): View|Factory|Application
+    {
+        $statuses = Task::$statuses;
+        $employees = Employee::select('id', 'first_name', 'last_name')->get();
+        return view(
+            $task ? 'tasks.edit' : 'tasks.create',
+            compact('statuses', 'employees', 'task')
+        );
     }
 
     public function edit(Task $task)
     {
         $this->authorize('update', $task);
-        return view('tasks.edit', compact('task'));
+        return $this->prepareFormData($task);
     }
-
 
     /**
      * @throws AuthorizationException
@@ -75,10 +85,10 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
 
-    public function search(Request $request)
+    public function getFilteredTasks(Request $request)
     {
         $subject = $request->input('subject');
-        $status_id = $request->input('status_id');
+        $status = $request->input('status');
         $employee_id = $request->input('employee_id');
         $tasks = Task::query();
         if ($subject) {
@@ -90,12 +100,10 @@ class TaskController extends Controller
             $tasks->where('employee_id', $employee_id);
         }
 
-        if ($status_id) {
-            $tasks->where('status_id', $status_id);
+        if ($status) {
+            $tasks->where('status', $status);
         }
 
-        $tasks = $tasks->get();
-
-        return view('tasks.index', compact('tasks'));
+        return $tasks->get();
     }
 }

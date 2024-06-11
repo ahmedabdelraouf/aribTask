@@ -12,15 +12,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
-            Schema::create('tasks', function (Blueprint $table) {
-                $table->id();
-                $table->string('subject');
-                $table->text('description')->nullable();
-                $table->foreignId('employee_id')->constrained()->onDelete('cascade')->nullable();
-                $table->enum('status', Task::$statuses)->default('todo');
-                $table->softDeletes();
-                $table->timestamps();
-            });
+            $table->id();
+            $table->string('subject');
+            $table->text('description')->nullable();
+            $table->foreignId('employee_id')->nullable()->constrained()->onDelete('cascade');
+            $table->enum('status', Task::$statuses)->default('todo');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
