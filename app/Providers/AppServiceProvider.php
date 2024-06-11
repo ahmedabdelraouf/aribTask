@@ -6,7 +6,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Task;
 use App\Policies\DepartmentPolicy;
-use App\Policies\EmployeePolicy;
+use App\Policies\UserPolicy;
 use App\Policies\TaskPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Employee::class => EmployeePolicy::class,
+        Employee::class => UserPolicy::class,
         Department::class => DepartmentPolicy::class,
         Task::class => TaskPolicy::class,
     ];

@@ -1,12 +1,11 @@
 <?php
-// In app/Policies/EmployeePolicy.php
+// In app/Policies/UserPolicy.php
 
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Employee;
 
-class EmployeePolicy
+class UserPolicy
 {
 
     public function viewAny(User $user)
@@ -14,7 +13,7 @@ class EmployeePolicy
         return $user->hasRole('admin') || $user->hasRole('manager');
     }
 
-    public function view(User $user, Employee $employee)
+    public function view(User $user, User $employee)
     {
         return $user->hasRole('admin') || $user->hasRole('manager') || $user->id === $employee->user_id;
     }
@@ -24,12 +23,12 @@ class EmployeePolicy
         return $user->hasRole('admin');
     }
 
-    public function update(User $user, Employee $employee)
+    public function update(User $user, User $employee)
     {
         return $user->hasRole('admin') || $user->id === $employee->user_id;
     }
 
-    public function delete(User $user, Employee $employee)
+    public function delete(User $user, User $employee)
     {
         return $user->hasRole('admin');
     }

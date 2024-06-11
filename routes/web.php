@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,8 +15,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::get('employees/search', [EmployeeController::class, 'search'])->name('employees.search');
-    Route::resource('employees', EmployeeController::class);
+    Route::get('users/search', [UserController::class, 'search'])->name('users.search');
+    Route::resource('users', UserController::class);
     Route::resource('departments', DepartmentController::class);
-    Route::resource('tasks', \App\Http\Controllers\TaskController::class);
+    Route::resource('tasks', TaskController::class);
 });

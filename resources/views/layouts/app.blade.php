@@ -33,8 +33,8 @@
                 <!-- Left Side Of Navbar -->
                 @auth
                     <ul class="navbar-nav me-auto">
-                        <a class="navbar-brand" href="{{ url('/employees') }}">
-                            {{ __('Employees') }}
+                        <a class="navbar-brand" href="{{ url('/users') }}">
+                            {{ __('Users') }}
                         </a>
                         <a class="navbar-brand" href="{{ url('/departments') }}">
                             {{ __('Departments') }}
