@@ -19,7 +19,7 @@ class Department extends Model
      */
     public function employees(): HasMany
     {
-        return $this->hasMany(Employee::class, 'department_id', 'id');
+        return $this->hasMany(User::class, 'department_id', 'id');
     }
 
     /**

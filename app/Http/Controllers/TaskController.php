@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\tasks\StoreTaskRequest;
 use App\Http\Requests\tasks\UpdateTaskRequest;
-use App\Models\Employee;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -21,10 +22,15 @@ class TaskController extends Controller
      */
     public function index(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $this->authorize('viewAny', Task::class);
-        $tasks = $this->getFilteredTasks($request);
+        $this->authorize('viewAny', User::class, Task::class);
+        $user = Auth::user();
+        $tasks = $this->getFilteredTasks($request, $user);
         $statuses = Task::$statuses;
-        $employees = Employee::select('id', 'first_name', 'last_name')->get();
+        if ($user->hasRole('employee')) {
+            $employees = User::select('id', 'first_name', 'last_name')->where('id', $user->id)->get();
+        } else {
+            $employees = User::select('id', 'first_name', 'last_name')->get();
+        }
         return view('tasks.index', compact('statuses', 'employees', 'tasks'));
     }
 
@@ -49,7 +55,12 @@ class TaskController extends Controller
     private function prepareFormData(Task $task = null): View|Factory|Application
     {
         $statuses = Task::$statuses;
-        $employees = Employee::select('id', 'first_name', 'last_name')->get();
+        $user = Auth::user();
+        if ($user->hasRole('employee')) {
+            $employees = User::select('id', 'first_name', 'last_name')->where('id', $user->id)->get();
+        } else {
+            $employees = User::select('id', 'first_name', 'last_name')->where("role", User::ROLE_EMPLOYEE)->get();
+        }
         return view(
             $task ? 'tasks.edit' : 'tasks.create',
             compact('statuses', 'employees', 'task')
@@ -69,11 +80,6 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
         $validated = $request->validated();
-
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('images', 'public');
-        }
-
         $task->update($validated);
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
@@ -85,19 +91,24 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
 
-    public function getFilteredTasks(Request $request)
+    public function getFilteredTasks(Request $request, $user)
     {
         $subject = $request->input('subject');
         $status = $request->input('status');
         $employee_id = $request->input('employee_id');
         $tasks = Task::query();
+
+        if ($user->hasRole('employee')) {
+            $tasks->where('user_id', $user->id);
+        }
+
         if ($subject) {
             $tasks->where(function ($query) use ($subject) {
                 $query->where('subject', 'LIKE', "%{$subject}%");
             });
         }
         if ($employee_id) {
-            $tasks->where('employee_id', $employee_id);
+            $tasks->where('user_id', $employee_id);
         }
 
         if ($status) {

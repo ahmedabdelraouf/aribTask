@@ -38,13 +38,13 @@
 
 <div class="col">
     <label for="status">Employee</label>
-    <select class="form-control" name="employee_id">
+    <select class="form-control" name="user_id">
         <option value="0">Select Employee</option>
 
         @if(!empty($employees))
             @foreach($employees as $employee)
                 <option
-                    @if((request()->get("employee_id") == $employee->id) ||((!empty($task))&&($task->employee_id == $employee->id))) selected
+                    @if((request()->get("user_id") == $employee->id) ||((!empty($task))&&($task->user_id == $employee->id))) selected
                     @endif
                     value="{{$employee->id}}">{{$employee->full_name}}</option>
             @endforeach

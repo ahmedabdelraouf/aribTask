@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -27,7 +28,15 @@ class UserController extends Controller
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $this->authorize('viewAny', User::class);
-        $users = User::with('manager')->get();
+        $users = User::with('manager');
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $users = User::all();
+        } elseif ($user->hasRole('manager')) {
+            $users = User::where('manager_id', $user->id)->get();
+        } else {
+            abort(403, 'Unauthorized');
+        }
         $userRoles = User::$roles;
         $departments = Department::all();
         return view('users.index', compact('users', 'departments', 'userRoles'));
@@ -42,8 +51,8 @@ class UserController extends Controller
         $this->authorize('create', User::class);
         $departments = Department::all();
         $roles = User::$roles;
-        $managers = User::where('role',User::ROLE_MANAGER)->get();
-        return view('users.create', compact('departments','managers','roles'));
+        $managers = User::where('role', User::ROLE_MANAGER)->get();
+        return view('users.create', compact('departments', 'managers', 'roles'));
     }
 
     public function store(StoreUserRequest $request)
@@ -54,6 +63,9 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images', 'public');
         }
+        if ($validated["department_id"] == 0) {
+            $validated["department_id"] = null;
+        }
         User::create($validated);
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -63,8 +75,8 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $departments = Department::all();
         $roles = User::$roles;
-        $managers = User::where('role',User::ROLE_MANAGER)->get();
-        return view('users.edit', compact('user', 'roles','departments','managers'));
+        $managers = User::where('role', User::ROLE_MANAGER)->get();
+        return view('users.edit', compact('user', 'roles', 'departments', 'managers'));
     }
 
 
@@ -78,6 +90,9 @@ class UserController extends Controller
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images', 'public');
+        }
+        if ($validated["department_id"] == 0) {
+            $validated["department_id"] = null;
         }
         $user->update($validated);
         return redirect()->route('users.index')->with('success', 'User updated successfully.');

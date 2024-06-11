@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Task;
-use App\Models\User;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -24,7 +23,7 @@ class TaskTableSeeder extends Seeder
             Task::create([
                 'subject' => $faker->sentence,
                 'description' => $faker->paragraph,
-                'employee_id' =>null,
+                'user_id' => null,
                 'status' => 'todo'
             ]);
         }

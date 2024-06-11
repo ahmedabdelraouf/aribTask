@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->string('subject');
             $table->text('description')->nullable();
-            $table->foreignId('employee_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum('status', Task::$statuses)->default('todo');
             $table->softDeletes();
             $table->timestamps();

@@ -20,8 +20,8 @@ class UpdateTaskRequest extends BaseFormRequest
             'subject' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'status' => 'required|string',
-            'employee_id' => 'nullable',
             'status.*' => 'required|string|in:' . implode(",", Task::$statuses),
+            'user_id' => 'nullable',
         ];
     }
 }

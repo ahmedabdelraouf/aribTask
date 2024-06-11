@@ -22,7 +22,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = ['first_name', 'last_name', 'email', 'phone', 'password',
-        'salary', 'image', 'manager_id', 'department_id','role'];
+        'salary', 'image', 'manager_id', 'department_id', 'role'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -81,7 +81,7 @@ class User extends Authenticatable
      */
     public function tasksCount(): HasMany
     {
-        return $this->hasMany(Task::class, "employee_id", "id");
+        return $this->hasMany(Task::class, "user_id", "id");
     }
 
     /**

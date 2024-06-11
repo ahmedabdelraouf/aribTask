@@ -33,15 +33,21 @@
                 <!-- Left Side Of Navbar -->
                 @auth
                     <ul class="navbar-nav me-auto">
-                        <a class="navbar-brand" href="{{ url('/users') }}">
-                            {{ __('Users') }}
-                        </a>
-                        <a class="navbar-brand" href="{{ url('/departments') }}">
-                            {{ __('Departments') }}
-                        </a>
-                        <a class="navbar-brand" href="{{ url('/tasks') }}">
-                            {{ __('Tasks') }}
-                        </a>
+                        @can('viewAny', \App\Models\User::class)
+                            <a class="navbar-brand" href="{{ url('/users') }}">
+                                {{ __('Users') }}
+                            </a>
+                        @endcan
+                        @can('viewAny', \App\Models\Department::class)
+                            <a class="navbar-brand" href="{{ url('/departments') }}">
+                                {{ __('Departments') }}
+                            </a>
+                        @endcan
+                        @can('viewAny', \App\Models\User::class)
+                            <a class="navbar-brand" href="{{ url('/tasks') }}">
+                                {{ __('Tasks') }}
+                            </a>
+                        @endcan
                     </ul>
                 @endauth
 

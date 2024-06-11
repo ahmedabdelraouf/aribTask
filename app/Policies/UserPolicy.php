@@ -10,12 +10,12 @@ class UserPolicy
 
     public function viewAny(User $user)
     {
-        return $user->hasRole('admin') || $user->hasRole('manager');
+        return $user->hasRole('admin') || $user->hasRole('manager') || $user->hasRole('employee');
     }
 
-    public function view(User $user, User $employee)
+    public function view(User $user)
     {
-        return $user->hasRole('admin') || $user->hasRole('manager') || $user->id === $employee->user_id;
+        return $user->hasRole('admin') || $user->hasRole('manager');
     }
 
     public function create(User $user)
@@ -23,12 +23,12 @@ class UserPolicy
         return $user->hasRole('admin');
     }
 
-    public function update(User $user, User $employee)
+    public function update(User $user)
     {
-        return $user->hasRole('admin') || $user->id === $employee->user_id;
+        return $user->hasRole('admin') || $user->hasRole('manager');
     }
 
-    public function delete(User $user, User $employee)
+    public function delete(User $user)
     {
         return $user->hasRole('admin');
     }

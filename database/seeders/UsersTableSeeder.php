@@ -18,14 +18,15 @@ class UsersTableSeeder extends Seeder
         $faker = Faker::create();
         for ($i = 0; $i < 1; $i++) {
             print_r("Please enter admon cerdentials: ");
-            $firstName = $this->command->ask('Enter first name of admin user');
-            $lastName = $this->command->ask('Enter last name of admin user');
-            $email = $this->command->ask('Enter email of the user');
-            $password = $this->command->ask('Enter the password of the user');
+            $firstName = $this->command->ask('Enter first name: ');
+            $lastName = $this->command->ask('Enter last name: ');
+            $email = $this->command->ask('Enter email: ');
+            $phone = $this->command->ask('Enter phone: ');
+            $password = $this->command->ask('Enter the password: ');
 
             $this->doCreate("$firstName", "$lastName",
                 $faker->randomFloat(2, 30000, 100000), null,
-                "$email", User::ROLE_ADMIN, "$password");
+                "$email", User::ROLE_ADMIN, "$password",$phone);
         }
         for ($i = 0; $i < 5; $i++) {
             $this->createUser($faker, User::ROLE_MANAGER);
@@ -47,7 +48,7 @@ class UsersTableSeeder extends Seeder
             $faker->unique()->safeEmail, "$role");
     }
 
-    public function doCreate($firstName, $lastName, $salary, $managerId, $email, $role, $password = "Aa@#123456")
+    public function doCreate($firstName, $lastName, $salary, $managerId, $email, $role, $password = "Aa@#123456",$phone = null)
     {
         User::create([
             'first_name' => $firstName,
@@ -56,7 +57,7 @@ class UsersTableSeeder extends Seeder
             'manager_id' => $managerId,
             'email' => $email,
             'email_verified_at' => now(),
-            'phone' => null,
+            'phone' => $phone,
             'phone_verified_at' => now(),
             'password' => Hash::make($password),
             'remember_token' => null,

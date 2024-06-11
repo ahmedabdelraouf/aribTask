@@ -11,10 +11,10 @@ class DepartmentPolicy
 
     public function viewAny(User $user)
     {
-        return $user->hasRole('admin') || $user->hasRole('manager');
+        return $user->hasRole('admin') || $user->hasRole('manager') || $user->hasRole('employee');
     }
 
-    public function view(User $user, Department $department)
+    public function view(User $user)
     {
         return $user->hasRole('admin') || $user->hasRole('manager');
     }
@@ -24,12 +24,12 @@ class DepartmentPolicy
         return $user->hasRole('admin');
     }
 
-    public function update(User $user, Department $department)
+    public function update(User $user)
     {
         return $user->hasRole('admin');
     }
 
-    public function delete(User $user, Department $department)
+    public function delete(User $user)
     {
         return $user->hasRole('admin');
     }

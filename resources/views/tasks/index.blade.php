@@ -3,7 +3,9 @@
 @section('content')
     <div class="container">
         <h1>Tasks</h1>
-        <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Add Task</a>
+        @can('create', \App\Models\Task::class)
+            <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Add Task</a>
+        @endcan
         @include("tasks._form_search")
         @include("layouts.session_message")
         <table class="table">
@@ -32,15 +34,17 @@
                     <td>{{$name??""}}</td>
                     <td>{{ $task->status }}</td>
                     <td>
-                        <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning">Edit And Assign to
-                            Employee</a>
-                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-                              style="display:inline;"
-                              onsubmit="return confirm('Are you sure you want to delete this task?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        @can('update', $task)
+                            <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning">Edit And Assign to Employee</a>
+                        @endcan
+
+                        @can('delete', $task)
+                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this task?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

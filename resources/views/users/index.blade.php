@@ -3,7 +3,9 @@
 @section('content')
     <div class="container">
         <h1>Users</h1>
-        <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Add User</a>
+        @can('create', \App\Models\User::class)
+            <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Add User</a>
+        @endcan
         @include('users._form_search')
         @include("layouts.session_message")
         <table class="table">
@@ -32,14 +34,20 @@
                     <td>{{$user->department->name??"None"}}</td>
                     <td>{{count($user->tasksCount)}}</td>
                     <td>
-                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                              style="display:inline;"
-                              onsubmit="return confirm('Are you sure you want to delete this employee?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+
+                        @can('update', \App\Models\User::class)
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edit</a>
+                        @endcan
+
+                        @can('delete', \App\Models\User::class)
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                  style="display:inline;"
+                                  onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach
